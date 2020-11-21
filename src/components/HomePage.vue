@@ -1,33 +1,44 @@
 <template>
   <div class="page-container">
-    <button v-on:click="ledOnOff()">LED {{ onOff }}</button>
+    <div class="light-graphic" ref="lightGraphic"></div>
   </div>
 </template>
 
 <script>
+
+import io from 'socket.io-client'
+
 export default {
   name: "HomePage",
   data() {
     return {
-      socket: this.$store.state.socket,
-      ledState: false,
-      onOff: "OFF",
+      socket: io('http://192.168.1.159:4000'),
     };
   },
   mounted() {
-    this.socket.on("join-room", (message) => {
-      this.message = message;
+    this.socket.on("light-on-off", value => {
+      if(value === 1){
+        this.$refs.lightGraphic.classList.remove('light-on')
+      } else {
+        this.$refs.lightGraphic.classList.add('light-on')
+      }
     });
-  },
-  methods: {
-    ledOnOff() {
-      this.ledState = !this.ledState;
-      this.ledState == false ? (this.onOff = "OFF") : (this.onOff = "ON");
-      this.socket.emit("switch-led", this.ledState);
-    },
   },
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped></style>
+<style scoped>
+
+.light-graphic {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: rgb(83, 0, 0);
+}
+
+.light-on {
+  background-color: red;
+}
+
+</style>

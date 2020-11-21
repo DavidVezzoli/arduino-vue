@@ -1,27 +1,18 @@
 <template>
   <div id="app" class="main-container">
-      <router-view />
+      <HomePage />
   </div>
 </template>
 
 <script>
+
+import HomePage from './components/HomePage.vue'
+
 export default {
   name: "App",
-  data() {
-    return {
-      socket: this.$store.state.socket,
-    }
+  components: {
+    HomePage
   },
-  mounted() {
-    this.socket.on("receive-go-to-game-room", url => {
-      this.$router.push(url)
-    })
-  },
-  methods: {
-    colorPicked(url){
-      this.$store.dispatch("updateUrl", url);
-    }
-  }
 };
 </script>
 
@@ -39,18 +30,6 @@ body {
   width: 100%;
   margin: 0;
   font-family: "Raleway", sans-serif;
-}
-
-button {
-  top: 0;
-  left: 0;
-  padding: 20px 20px;
-  margin: 10px;
-  background-color: black;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
 }
 
 .main-container {

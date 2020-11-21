@@ -1,34 +1,43 @@
-const express = require('express')
-const http = require('http')
-const app = express()
+const express = require("express");
+const http = require("http");
+const app = express();
 const five = require("johnny-five");
 const board = new five.Board({ repl: false });
-const server = http.createServer(app)
-const io = require('socket.io')(server, {
+const server = http.createServer(app);
+const io = require("socket.io")(server, {
     cors: {
-        origin: '*',
-    }
+        origin: "*",
+    },
 });
 
-const port = process.env.PORT || 4000
+const port = process.env.PORT || 4000;
 
-app.use(express.static(__dirname + '/dist/'));
+app.use(express.static(__dirname + "/dist/"));
 
 server.listen(port, () => {
-    console.log(`Server is up and runnning on port ${ port }`)
-})
+    console.log(`Server is up and runnning on port ${port}`);
+});
 
 board.on("ready", function() {
-    io.on('connection', (socket) => {
 
-        socket.on('disconnect', function() {
-            console.log(`client disconnected.`)
+    const LED = 13; // Use the onboard Uno LED
+    const isObstaclePin = 2; // input pin
+    const led = new five.Led(LED)
+
+    io.on("connection", (socket) => {
+
+        this.pinMode(isObstaclePin, five.Pin.INPUT);
+        this.digitalRead(isObstaclePin, function(value) {
+            console.log(value);
+            value === 1 ? led.off() : led.on()
+            io.emit('light-on-off', value)
         });
 
-        const led = new five.Led(13)
-
-        socket.on("switch-led", (data) => {
-            data ? led.on() : led.off();
+        socket.on("disconnect", function() {
+            console.log(`client disconnected.`);
         });
-    })
-})
+
+        socket.on("switch-led", () => {});
+
+    });
+});
