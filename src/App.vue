@@ -1,17 +1,16 @@
 <template>
   <div id="app" class="main-container">
-      <HomePage />
+    <HomePage />
   </div>
 </template>
 
 <script>
-
-import HomePage from './components/HomePage.vue'
+import HomePage from "./components/HomePage.vue";
 
 export default {
   name: "App",
   components: {
-    HomePage
+    HomePage,
   },
 };
 </script>
@@ -41,8 +40,7 @@ body {
   width: auto;
   height: auto;
   margin: 0;
-  padding: 0;
+  padding: 15px;
   text-align: center;
 }
-
 </style>

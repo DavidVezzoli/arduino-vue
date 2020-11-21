@@ -19,25 +19,19 @@ server.listen(port, () => {
 });
 
 board.on("ready", function() {
-
-    const LED = 13; // Use the onboard Uno LED
-    const isObstaclePin = 2; // input pin
-    const led = new five.Led(LED)
+    const LED = 13;
+    const isObstaclePin = 2;
+    const led = new five.Led(LED);
 
     io.on("connection", (socket) => {
-
         this.pinMode(isObstaclePin, five.Pin.INPUT);
         this.digitalRead(isObstaclePin, function(value) {
-            console.log(value);
-            value === 1 ? led.off() : led.on()
-            io.emit('light-on-off', value)
+            value === 1 ? led.off() : led.on();
+            io.emit("light-on-off", value);
         });
 
         socket.on("disconnect", function() {
             console.log(`client disconnected.`);
         });
-
-        socket.on("switch-led", () => {});
-
     });
 });
